@@ -28,6 +28,9 @@ const doc = {
       LoginRequest: {
         identifier: "Bilal",
         password: "12345"
+      },
+      ActivationRequest: {
+        code: "abcdef",
       }
     }
   }
