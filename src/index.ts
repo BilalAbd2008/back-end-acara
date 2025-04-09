@@ -16,9 +16,10 @@ async function init() {
 
     // Konfigurasi CORS
     const allowedOrigins = [
-      process.env.CLIENT_HOST || "http://localhost:3001",
-      "https://back-end-acara-hazel.vercel.app",
-      "http://localhost:3000",
+      "http://localhost:3001", // Frontend local
+      "http://localhost:3000", // Frontend local alternatif
+      "https://back-end-acara-hazel.vercel.app", // Backend Vercel
+      process.env.CLIENT_HOST || "", // Environment variable
     ];
 
     const corsOptions = {
@@ -29,6 +30,7 @@ async function init() {
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
+          console.log("Blocked by CORS:", origin);
           callback(new Error("Not allowed by CORS"));
         }
       },
