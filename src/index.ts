@@ -13,7 +13,15 @@ async function init() {
     console.log("database status: ", result)
 
     const app = express();
-    app.use(cors());
+    // Konfigurasi CORS
+    const corsOptions = {
+      origin: process.env.CLIENT_HOST || "http://localhost:3001",
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true
+    };
+    
+    app.use(cors(corsOptions));
     app.use(bodyParser.json())
 
     const PORT = 3000;
