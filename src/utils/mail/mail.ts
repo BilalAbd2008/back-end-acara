@@ -12,22 +12,29 @@ import {
 } from "../env";
 import { StringMappingType } from "typescript";
 
-const transporter = nodemailer.createTransport({
+console.log("Email Configuration:", {
   service: EMAIL_SMTP_SERVICE_NAME,
   host: EMAIL_SMTP_HOST,
   port: EMAIL_SMTP_PORT,
   secure: EMAIL_SMTP_SECURE,
+  user: EMAIL_SMTP_USER,
+});
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
   auth: {
     user: EMAIL_SMTP_USER,
     pass: EMAIL_SMTP_PASS,
   },
-  requireTLS: true,
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Verify transporter configuration
 transporter.verify(function (error, success) {
   if (error) {
-    console.log("Email configuration error:", error);
+    console.error("Email configuration error:", error);
   } else {
     console.log("Email server is ready to send messages");
   }
