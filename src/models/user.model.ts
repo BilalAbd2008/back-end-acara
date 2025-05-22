@@ -76,7 +76,8 @@ UserSchema.post("save", async function (doc, next) {
 
     console.log("Preparing to send activation email to:", user.email);
 
-    // Tentukan base URL berdasarkan environment
+    // Gunakan URL Vercel khusus untuk link aktivasi
+    const activationUrl = "https://back-end-acara-hazel.vercel.app";
     const baseUrl =
       process.env.NODE_ENV === "production"
         ? "https://back-end-acara-hazel.vercel.app"
@@ -87,7 +88,7 @@ UserSchema.post("save", async function (doc, next) {
       fullName: user.fullName,
       email: user.email,
       createdAt: user.createdAt,
-      activationLink: `${baseUrl}/api/auth/activation?code=${user.activationCode}`,
+      activationLink: `${activationUrl}/api/auth/activation?code=${user.activationCode}`,
     });
 
     await sendMail({

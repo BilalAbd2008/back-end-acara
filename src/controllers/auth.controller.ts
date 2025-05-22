@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 import UserModel from "../models/user.model";
 import { encrypt } from "../utils/encryption";
-import {generateToken } from "../utils/jwt";
+import { generateToken } from "../utils/jwt";
 import { IReqUser } from "../middlewares/auth.middleware";
 
 type TRegister = {
@@ -17,7 +17,7 @@ type TRegister = {
 type TLogin = {
   identifier: string;
   password: string;
-}
+};
 
 const registerValidateSchema = Yup.object({
   fullName: Yup.string().required(),
@@ -28,7 +28,7 @@ const registerValidateSchema = Yup.object({
     .min(6, "Password must be at least 6 characters")
     .test(
       "at-least-one-uppercase-letter",
-      "Contains at least one uppercase letter", 
+      "Contains at least one uppercase letter",
       (value) => {
         if (!value) return false;
         const regex = /^(?=.*[A-Z])/;
@@ -37,7 +37,7 @@ const registerValidateSchema = Yup.object({
     )
     .test(
       "at-least-one-number",
-      "Contains at least one uppercase letter", 
+      "Contains at least one uppercase letter",
       (value) => {
         if (!value) return false;
         const regex = /^(?=.*\d)/;
@@ -71,7 +71,7 @@ export default {
         username,
         email,
         password,
-      })
+      });
 
       res.status(200).json({
         message: "Success registration!",
@@ -93,12 +93,9 @@ export default {
       schema: {$ref: "#/components/schemas/LoginRequest"}
       }
     */
-    const {
-      identifier,
-      password,
-    } = req.body as unknown as TLogin;
+    const { identifier, password } = req.body as unknown as TLogin;
     try {
-      // ambil data user berdasarakn "identifies" -> email dan username 
+      // ambil data user berdasarakn "identifies" -> email dan username
 
       const userByIdentifier = await UserModel.findOne({
         $or: [
@@ -118,9 +115,10 @@ export default {
           data: null,
         });
       }
-      
+
       // validasi password
-      const validatePassword : boolean = encrypt(password) === userByIdentifier.password;
+      const validatePassword: boolean =
+        encrypt(password) === userByIdentifier.password;
 
       if (!validatePassword) {
         return res.status(403).json({
@@ -137,8 +135,7 @@ export default {
       res.status(200).json({
         message: "Login success",
         data: token,
-      })
-      
+      });
     } catch (error) {
       const err = error as unknown as Error;
       res.status(400).json({
@@ -157,10 +154,8 @@ export default {
 
       res.status(200).json({
         message: "Success get user profile",
-        data:result,
+        data: result,
       });
-
-
     } catch (error) {
       const err = error as unknown as Error;
       res.status(400).json({
@@ -173,13 +168,23 @@ export default {
     /* 
       #swagger.tags = ['Auth']
       #swagger.description = 'Endpoint untuk aktivasi akun'
-      #swagger.requestBody = {
+      #swagger.parameters['code'] = {
+        in: 'query',
+        description: 'Kode aktivasi',
         required: true,
-        schema: { $ref: "#/components/schemas/ActivationRequest" }
+        type: 'string'
       }
     */
     try {
-      const {code} = req.body as {code: string};
+      // Ambil code dari query parameter atau body
+      const code = req.query.code || req.body.code;
+
+      if (!code) {
+        return res.status(400).json({
+          message: "Activation code is required",
+          data: null,
+        });
+      }
 
       const user = await UserModel.findOneAndUpdate(
         {
@@ -192,11 +197,19 @@ export default {
           new: true,
         }
       );
+
+      if (!user) {
+        return res.status(404).json({
+          message: "Invalid activation code",
+          data: null,
+        });
+      }
+
+      // Redirect ke halaman sukses atau tampilkan pesan sukses
       res.status(200).json({
         message: "User successfully activated",
         data: user,
       });
-
     } catch (error) {
       const err = error as unknown as Error;
       res.status(400).json({
@@ -205,5 +218,4 @@ export default {
       });
     }
   },
-  
-  };
+};
