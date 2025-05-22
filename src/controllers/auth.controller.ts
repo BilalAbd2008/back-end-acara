@@ -176,7 +176,6 @@ export default {
       }
     */
     try {
-      // Ambil code dari query parameter atau body
       const code = req.query.code || req.body.code;
 
       if (!code) {
@@ -205,17 +204,18 @@ export default {
         });
       }
 
-      // Redirect ke halaman sukses atau tampilkan pesan sukses
-      res.status(200).json({
-        message: "User successfully activated",
-        data: user,
-      });
+      // Redirect ke halaman frontend dengan status sukses
+      const frontendUrl = process.env.CLIENT_HOST || "http://localhost:3001";
+      res.redirect(
+        `${frontendUrl}/auth/activation-success?status=success&email=${user.email}`
+      );
     } catch (error) {
       const err = error as unknown as Error;
-      res.status(400).json({
-        message: err.message,
-        data: null,
-      });
+      // Redirect ke halaman frontend dengan status error
+      const frontendUrl = process.env.CLIENT_HOST || "http://localhost:3001";
+      res.redirect(
+        `${frontendUrl}/auth/activation-error?status=error&message=${err.message}`
+      );
     }
   },
 };
