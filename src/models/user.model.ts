@@ -80,7 +80,7 @@ UserSchema.post("save", async function (doc, next) {
     const frontendUrl =
       process.env.NODE_ENV === "production"
         ? "https://frontend-acara.vercel.app"
-        : "http://localhost:3001";
+        : "http://localhost:3000";
 
     const contentMail = await renderMailHtml("registration-succes.ejs", {
       username: user.username,
