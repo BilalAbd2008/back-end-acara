@@ -204,18 +204,21 @@ export default {
         });
       }
 
-      // Redirect ke halaman frontend dengan status sukses
-      const frontendUrl = process.env.CLIENT_HOST || "http://localhost:3001";
-      res.redirect(
-        `${frontendUrl}/auth/activation-success?status=success&email=${user.email}`
-      );
+      // Kembalikan response JSON untuk diproses di frontend
+      res.status(200).json({
+        message: "User successfully activated",
+        data: {
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+        },
+      });
     } catch (error) {
       const err = error as unknown as Error;
-      // Redirect ke halaman frontend dengan status error
-      const frontendUrl = process.env.CLIENT_HOST || "http://localhost:3001";
-      res.redirect(
-        `${frontendUrl}/auth/activation-error?status=error&message=${err.message}`
-      );
+      res.status(400).json({
+        message: err.message,
+        data: null,
+      });
     }
   },
 };
