@@ -9,7 +9,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   const authorization = req.headers?.authorization;
 
   if (!authorization) {
-    return res.status(401).json({ 
+    return res.status(401).json({
       message: "Unauthorized",
       data: null,
     });
@@ -26,7 +26,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
   const user = getUserData(token);
 
-  if (!user){
+  if (!user) {
     return res.status(401).json({
       message: "Unauthorized",
       data: null,
@@ -36,4 +36,4 @@ export default (req: Request, res: Response, next: NextFunction) => {
   (req as IReqUser).user = user;
 
   next();
-}; 
+};
