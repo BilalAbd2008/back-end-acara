@@ -9,7 +9,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   const authorization = req.headers?.authorization;
 
   if (!authorization) {
-    return res.status(403).json({ 
+    return res.status(401).json({ 
       message: "Unauthorized",
       data: null,
     });
@@ -18,7 +18,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   const [prefix, token] = authorization.split(" ");
 
   if (!(prefix === "Bearer" && token)) {
-    return res.status(403).json({
+    return res.status(401).json({
       message: "Unauthorized",
       data: null,
     });
@@ -27,7 +27,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   const user = getUserData(token);
 
   if (!user){
-    return res.status(403).json({
+    return res.status(401).json({
       message: "Unauthorized",
       data: null,
     });
