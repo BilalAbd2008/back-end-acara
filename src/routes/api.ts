@@ -13,7 +13,8 @@ router.post("/auth/activation", authController.activation);
 router.get("/auth/activation", authController.activation);
 
 router.get('/test-acl', 
-  [authMiddleware, aclMiddleware([ROLES.ADMIN, ROLES.MEMBER])],(req: Request, res: Response) => {
+  [authMiddleware, aclMiddleware([ROLES.ADMIN, ROLES.MEMBER, ROLES.MANAGER])],
+  (req: Request, res: Response) => {
   res.status(200).json({
     data: "success",
     message: "OK",
