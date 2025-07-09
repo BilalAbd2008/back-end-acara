@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import UserModel from "../models/user.model";
 import { encrypt } from "../utils/encryption";
 import { generateToken } from "../utils/jwt";
-import { IReqUser } from "../middlewares/auth.middleware";
+import { IReqUser } from "../utils/interfaces";
 
 type TRegister = {
   fullName: string;
@@ -128,8 +128,9 @@ export default {
       }
 
       const token = generateToken({
-        id: userByIdentifier._id,
+        id: userByIdentifier._id, // tanpa .toString() agar sesuai dengan interface
         role: userByIdentifier.role,
+        activationCode: userByIdentifier.activationCode || "",
       });
 
       res.status(200).json({

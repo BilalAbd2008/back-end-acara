@@ -1,16 +1,12 @@
 import { Types } from "mongoose";
-import { User } from "../models/user.model"
-import jwt from 'jsonwebtoken';
+import { User } from "../models/user.model";
+import jwt from "jsonwebtoken";
 import { SECRET } from "./env";
-
-export interface IUserToken {
-  id: Types.ObjectId;
-  role: string;
-}
+import { IUserToken } from "./interfaces";
 
 export const generateToken = (user: IUserToken): string => {
   const token = jwt.sign(user, SECRET, {
-    expiresIn: '1h',
+    expiresIn: "1h",
   });
   return token;
 };
