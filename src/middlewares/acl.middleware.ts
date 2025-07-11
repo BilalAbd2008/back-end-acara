@@ -1,5 +1,6 @@
 import { Response, NextFunction } from "express";
 import { IReqUser } from "../utils/interfaces";
+import response from "../utils/response";
 
 
 export default (roles: string[]) => {
@@ -7,10 +8,7 @@ export default (roles: string[]) => {
     const role = req.user?.role;
 
     if (!role || !roles.includes(role)) {
-      return res.status(403).json({
-        data: null,
-        message: "Forbidden",
-      });
+      return response.unauthorized(res, "forbidden");
     }
 
     next();
